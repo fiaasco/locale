@@ -17,7 +17,7 @@ def test_locales_defaultfile(host):
     assert deflocale.exists
     assert deflocale.user == 'root'
     assert deflocale.group == 'root'
-    assert deflocale.contains('^LANG=en_US.UTF-8')
+    assert deflocale.contains('^LANG="en_US.UTF-8"')
 
 
 def test_locales_localectl(host):
