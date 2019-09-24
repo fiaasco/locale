@@ -1,0 +1,41 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+scenario:
+  name: ubuntu
+lint:
+  name: yamllint
+platforms:
+  - name: ubuntu-locale-xenial
+    image: ubuntu:xenial
+    command: /sbin/init
+    privileged: true
+  - name: ubuntu-locale-bionic
+    image: ubuntu:bionic
+    command: /sbin/init
+    privileged: true
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      callback_whitelist: profile_tasks
+      jinja2_extensions: jinja2.ext.do
+      gather_timeout: 30
+      timeout: 30
+    ssh_connection:
+      pipelining: true
+  inventory:
+    group_vars:
+      all:
+        stage: docker
+        locales:
+          - nl_BE.UTF-8
+          - en_US.UTF-8
+  lint:
+    name: ansible-lint
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

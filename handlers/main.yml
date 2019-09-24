@@ -1,0 +1,4 @@
+---
+
+- name: set system default locale
+  command: "localectl set-locale LANG={{ default_locale }}"

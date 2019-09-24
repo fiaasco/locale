@@ -1,0 +1,21 @@
+---
+
+- name: ensure locales is installed
+  apt:
+    name: locales
+    state: present
+
+- name: Ensure a locale exists
+  locale_gen:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ locales }}"
+  notify: set system default locale
+
+- name: check default locale
+  command: localectl status
+  changed_when: >
+    '   System Locale: LANG={{ default_locale }}'
+    not in deflocale.stdout_lines|list
+  register: deflocale
+  notify: set system default locale

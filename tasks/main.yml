@@ -1,0 +1,4 @@
+---
+
+- name: Install
+  include_tasks: "install-{{ ansible_os_family }}.yml"

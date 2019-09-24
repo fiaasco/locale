@@ -1,0 +1,7 @@
+---
+
+# description: locales to generate and activate
+# The first one in the list will be made the system default
+# type: dict
+locales:
+  - en_US.UTF-8

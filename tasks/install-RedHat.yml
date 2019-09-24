@@ -1,0 +1,26 @@
+---
+
+# tasks file for locale
+# Waiting on bug to be fixed for EnterpriseLinux
+# https://github.com/ansible/ansible/issues/44708
+
+- name: check if locale exists
+  command: locale -a
+  register: found_locale
+  changed_when: false
+  failed_when: false
+
+- name: create locale
+  command: "localedef -i {{ item|regex_replace('(.*)\\..*', '\\1') }} -f {{ item|regex_replace('.*\\.(.*)', '\\1') }} {{ item|quote }}"
+  when: item|regex_replace('-', '')|lower not in found_locale.stdout_lines|lower
+  loop: "{{ locales }}"
+  tags:
+    - skip_ansible_lint
+
+- name: check default locale
+  command: localectl status
+  changed_when: >
+    '   System Locale: LANG={{ default_locale }}'
+    not in deflocale.stdout_lines|list
+  register: deflocale
+  notify: set system default locale
