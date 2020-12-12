@@ -5,8 +5,11 @@ driver:
   name: docker
 scenario:
   name: centos
-lint:
-  name: yamllint
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8
 platforms:
   - name: centos-locale-7
     image: centos:7

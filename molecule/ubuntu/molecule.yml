@@ -5,11 +5,14 @@ driver:
   name: docker
 scenario:
   name: ubuntu
-lint:
-  name: yamllint
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8
 platforms:
-  - name: ubuntu-locale-xenial
-    image: ubuntu:xenial
+  - name: ubuntu-locale-focal
+    image: ubuntu:focal
     command: /sbin/init
     privileged: true
   - name: ubuntu-locale-bionic

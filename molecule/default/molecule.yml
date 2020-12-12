@@ -5,8 +5,11 @@ driver:
   name: docker
 scenario:
   name: default
-lint:
-  name: yamllint
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8
 platforms:
   - name: debian-locale-9
     image: debian:9
