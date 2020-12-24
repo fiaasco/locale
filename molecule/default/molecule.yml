@@ -15,20 +15,29 @@ platforms:
     image: debian:9
     command: /lib/systemd/systemd
     privileged: true
+    dockerfile: ../resources/playbooks/Dockerfile.j2
   - name: debian-locale-10
     image: debian:10
     command: /lib/systemd/systemd
     privileged: true
+    dockerfile: ../resources/playbooks/Dockerfile.j2
 provisioner:
   name: ansible
+  playbooks:
+    create: ../resources/playbooks/create.yml
+    destroy: ../resources/playbooks/destroy.yml
+    converge: ../resources/playbooks/converge.yml
+    prepare: ../resources/playbooks/prepare.yml
+  log: true
+  options:
+    vvv: true
   config_options:
     defaults:
       callback_whitelist: profile_tasks
       jinja2_extensions: jinja2.ext.do
       gather_timeout: 30
       timeout: 30
-    ssh_connection:
-      pipelining: true
+      verbosity: 3
   inventory:
     group_vars:
       all:
@@ -36,9 +45,6 @@ provisioner:
         locales:
           - nl_BE.UTF-8
           - en_US.UTF-8
-  lint:
-    name: ansible-lint
 verifier:
   name: testinfra
-  lint:
-    name: flake8
+  directory: ../resources/tests/
