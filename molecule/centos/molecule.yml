@@ -15,16 +15,20 @@ platforms:
     image: centos:7
     command: /sbin/init
     privileged: true
+    dockerfile: ../resources/playbooks/Dockerfile.j2
 provisioner:
   name: ansible
+  playbooks:
+    create: ../resources/playbooks/create.yml
+    destroy: ../resources/playbooks/destroy.yml
+    converge: ../resources/playbooks/converge.yml
+    # skip shared prepare for Debian based systems here
   config_options:
     defaults:
       callback_whitelist: profile_tasks
       jinja2_extensions: jinja2.ext.do
       gather_timeout: 30
       timeout: 30
-    ssh_connection:
-      pipelining: true
   inventory:
     group_vars:
       all:
@@ -32,9 +36,5 @@ provisioner:
         locales:
           - en_US.UTF-8
           - nl_BE.UTF-8
-  lint:
-    name: ansible-lint
 verifier:
   name: testinfra
-  lint:
-    name: flake8

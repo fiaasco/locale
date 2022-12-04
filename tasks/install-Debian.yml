@@ -12,10 +12,12 @@
   loop: "{{ locales }}"
   notify: set system default locale
 
+- name: where to check for
+  set_fact:
+    check_locale: 'System Locale: LANG={{ default_locale }}'
+
 - name: check default locale
   command: localectl status
-  changed_when: >
-    '   System Locale: LANG={{ default_locale }}'
-    not in deflocale.stdout_lines|list
+  changed_when: check_locale in deflocale.stdout_lines|list
   register: deflocale
   notify: set system default locale
